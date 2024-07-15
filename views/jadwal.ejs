@@ -13,40 +13,32 @@
 <body>
     <ul class="nav nav-pills">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/">Penyewaan</a>
+            <a class="nav-link" aria-current="page" href="/">Penyewaan</a>
         </li>
         <li class="nav-item">
             <a class="nav-link active" href="/jadwal">Lihat jadwal</a>
-          </li>
-   
-      </ul>
+        </li>
+    </ul>
 
     <div class="container">
-      
-
         <!-- Formulir Pencarian -->
-        <div class="container">
-            <form class="form" action="/search" method="GET">
-                <span class="signup">Lihat Jadwal</span>
-                
-                <label for="tanggal">Pilih Tanggal:</label>
-                <input type="date" id="tanggal" name="tanggal" class="form--input" required>
-        
-                <button type="submit" class="btn btn-primary mt-4 form--submit">Lihat</button>
-            </form>
-        </div>
-    
-        <div class="card mt-4">
+        <form class="form mb-4" action="/search" method="GET">
+            <span class="sewa">Lihat Jadwal</span>
+            <label for="tanggal">Pilih Tanggal:</label>
+            <input type="date" id="tanggal" name="tanggal" class="form--input" required>
+            <button type="submit" class="btn btn-primary mt-2 form--submit">Lihat</button>
+        </form>
 
-        <h2 class="mt-4">Jadwal</h2>
-        <table class="table mt-4">
+        <!-- Tabel Jadwal -->
+        <span class="sewa">Jadwal</span>
+        <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Nama</th>
-                    <th>Tanggal</th>
-                    <th>Jam Masuk</th>
-                    <th>Jam Keluar</th>
-                   
+                    <th scope="col">Nama</th>
+                    <th scope="col">Tanggal</th>
+                    <th scope="col">Masuk</th>
+                    <th scope="col">Keluar</th>
+                    <th scope="col">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -57,13 +49,27 @@
                                 <%= item.nama %>
                             </td>
                             <td>
-                                <%= item.tanggal %>
+                                <%= moment(item.tanggal).format('DD-MM-YYYY') %>
                             </td>
                             <td>
-                                <%= item.jam_masuk %>
+                                <%= moment(item.jam_masuk, 'HH:mm:ss' ).format('HH:mm') %>
                             </td>
                             <td>
-                                <%= item.jam_keluar %>
+                                <%= moment(item.jam_keluar, 'HH:mm:ss' ).format('HH:mm') %>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary btn-confirm-update"
+                                    data-bs-toggle="modal" data-bs-target="#modalConfirmUpdate"
+                                    data-nomor-telepon="<%= item.nomor_telepon %>"
+                                    data-tanggal="<%= moment(item.tanggal).format('YYYY-MM-DD') %>">
+                                    Update
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger btn-confirm-delete"
+                                    data-bs-toggle="modal" data-bs-target="#modalDelete"
+                                    data-nomor-telepon="<%= item.nomor_telepon %>"
+                                    data-tanggal="<%= moment(item.tanggal).format('YYYY-MM-DD') %>">
+                                    Delete
+                                </button>
                             </td>
                         </tr>
                         <% }); %>
@@ -76,10 +82,133 @@
         </table>
     </div>
 
-    <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-0hKXawmq4MK+9HzF4h/+f13gwsyXfFubpU4uNTlKBC5qlS99Sgvh16YI8bJl+qz/" crossorigin="anonymous">
-        </script>
+    <!-- Modal Konfirmasi Update -->
+    <div class="modal fade" id="modalConfirmUpdate" tabindex="-1" aria-labelledby="modalConfirmUpdateLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalConfirmUpdateLabel">Konfirmasi Update</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="confirmUpdateForm">
+                        <div class="mb-3">
+                            <label for="confirmTeleponUpdate" class="form-label">Nomor Telepon:</label>
+                            <input type="tel" name="confirmTelepon" class="form-control" id="confirmTeleponUpdate"
+                                required>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="btnConfirmUpdate">Konfirmasi</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Update -->
+    <div class="modal fade" id="modalUpdate" tabindex="-1" aria-labelledby="modalUpdateLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalUpdateLabel">Update Jadwal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/update" method="POST">
+                        <input type="hidden" name="nomorTelepon" id="updateNomorTelepon" value="">
+                        <input type="hidden" name="tanggal" id="updateTanggal" value="">
+                        <div class="mb-3">
+                            <label for="namaUpdate" class="form-label">Nama:</label>
+                            <input type="text" name="nama" class="form-control" id="namaUpdate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jamMasukUpdate" class="form-label">Jam Masuk:</label>
+                            <input type="time" name="jamMasuk" class="form-control" id="jamMasukUpdate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jamKeluarUpdate" class="form-label">Jam Keluar:</label>
+                            <input type="time" name="jamKeluar" class="form-control" id="jamKeluarUpdate" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Delete -->
+    <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDeleteLabel">Hapus Jadwal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/delete" method="POST">
+                        <input type="hidden" name="nomorTelepon" id="deleteNomorTelepon" value="">
+                        <input type="hidden" name="tanggal" id="deleteTanggal" value="">
+                        <div class="mb-3">
+                            <label for="confirmTeleponDeleteFinal" class="form-label">Nomor Telepon:</label>
+                            <input type="tel" name="confirmTelepon" class="form-control" id="confirmTeleponDeleteFinal"
+                                required>
+                        </div>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+    <script>
+        document.querySelectorAll('.btn-confirm-update').forEach(button => {
+            button.addEventListener('click', () => {
+                const nomorTelepon = button.getAttribute('data-nomor-telepon');
+                const tanggal = button.getAttribute('data-tanggal');
+                const confirmTeleponInput = document.getElementById('confirmTeleponUpdate');
+                confirmTeleponInput.dataset.nomorTelepon = nomorTelepon;
+                confirmTeleponInput.dataset.tanggal = tanggal;
+            });
+        });
+
+        document.getElementById('btnConfirmUpdate').addEventListener('click', () => {
+            const confirmTeleponInput = document.getElementById('confirmTeleponUpdate');
+            const nomorTelepon = confirmTeleponInput.value;
+            const dataNomorTelepon = confirmTeleponInput.dataset.nomorTelepon;
+            const tanggal = confirmTeleponInput.dataset.tanggal;
+
+            if (nomorTelepon === dataNomorTelepon) {
+                document.getElementById('updateNomorTelepon').value = nomorTelepon;
+                document.getElementById('updateTanggal').value = tanggal;
+
+                const confirmModal = bootstrap.Modal.getInstance(document.getElementById('modalConfirmUpdate'));
+                confirmModal.hide();
+
+                const updateModal = new bootstrap.Modal(document.getElementById('modalUpdate'));
+                updateModal.show();
+            } else {
+                alert('Nomor telepon tidak sesuai. Silakan coba lagi.');
+            }
+        });
+
+        document.querySelectorAll('.btn-confirm-delete').forEach(button => {
+            button.addEventListener('click', () => {
+                const nomorTelepon = button.getAttribute('data-nomor-telepon');
+                const tanggal = button.getAttribute('data-tanggal');
+                document.getElementById('deleteNomorTelepon').value = nomorTelepon;
+                document.getElementById('deleteTanggal').value = tanggal;
+
+                const deleteModal = new bootstrap.Modal(document.getElementById('modalDelete'));
+                deleteModal.show();
+            });
+        });
+    </script>
 </body>
 
 </html>
