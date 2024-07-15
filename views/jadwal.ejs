@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <ul class="nav nav-pills">
+    <ul class="nav nav-pills fixed-top-nav">
         <li class="nav-item">
             <a class="nav-link" aria-current="page" href="/">Penyewaan</a>
         </li>
@@ -19,7 +19,6 @@
             <a class="nav-link active" href="/jadwal">Lihat jadwal</a>
         </li>
     </ul>
-
     <div class="container">
         <!-- Formulir Pencarian -->
         <form class="form mb-4" action="/search" method="GET">
@@ -64,8 +63,8 @@
                                     data-tanggal="<%= moment(item.tanggal).format('YYYY-MM-DD') %>">
                                     Update
                                 </button>
-                                <button type="button" class="btn btn-sm btn-danger btn-confirm-delete"
-                                    data-bs-toggle="modal" data-bs-target="#modalDelete"
+                                <button type="button" style="width: 63px;" class="btn btn-sm btn-danger btn-confirm-delete mt-2 
+                                    data-bs-toggle=" modal" data-bs-target="#modalDelete"
                                     data-nomor-telepon="<%= item.nomor_telepon %>"
                                     data-tanggal="<%= moment(item.tanggal).format('YYYY-MM-DD') %>">
                                     Delete
@@ -81,6 +80,39 @@
             </tbody>
         </table>
     </div>
+
+    <footer class="bg-dark text-light mt-5">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-4 mb-3">
+                    <h5>Kontak Kami</h5>
+                    <ul class="list-unstyled">
+                        <li>Alamat : Kp Cikoneng 2 (Warung pak Karna) </li>
+                        <li>Telepon : +62 812 3456 7890</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <h5>Informasi</h5>
+                    <p>Pembayaran sewa hanya bayar di tempat apabila ada oknum yang menyuruh transfer itu bukan dari
+                        pihak GOR AGS.</p>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <p><iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d495.11237131753927!2d107.74501964083528!3d-6.902684218978498!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68dd1d10234631%3A0xaa7e0cec8327c408!2sGOR%20Badminton%20AGS%20Cikoneng%20(Warung%20pak%20karna)!5e0!3m2!1sid!2sid!4v1721058912321!5m2!1sid!2sid"
+                            width="370" height="300" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="mb-0">© 2024 Jadwal Penyewaan. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <!-- Modal Konfirmasi Update -->
     <div class="modal fade" id="modalConfirmUpdate" tabindex="-1" aria-labelledby="modalConfirmUpdateLabel"
