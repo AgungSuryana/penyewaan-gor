@@ -1,14 +1,13 @@
-const express = require('express');
+express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const path = require('path');
 const moment = require('moment');
+const { body, validationResult } = require('express-validator');
 const app = express();
 
 app.set('view engine', 'ejs');
-// Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.set('views', path.join(__dirname, 'views'));
 
 const db = mysql.createConnection({
@@ -30,7 +29,19 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-app.post('/sewa', (req, res) => {
+
+// Route untuk menambah sewa dengan validasi input
+app.post('/sewa', [
+    body('nama').isString().notEmpty().withMessage('Nama harus berupa teks dan tidak boleh kosong'),
+    body('tanggal').isISO8601().withMessage('Tanggal harus berupa tanggal yang valid'),
+    body('jamMasuk').isString().notEmpty().withMessage('Jam masuk tidak boleh kosong'),
+    body('jamKeluar').isString().notEmpty().withMessage('Jam keluar tidak boleh kosong'),
+    body('nomorTelepon').isNumeric().isLength({ min: 10, max: 12 }).withMessage('Nomor telepon harus berupa angka dan panjangnya antara 10 hingga 12 digit')
+], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     const { nama, tanggal, jamMasuk, jamKeluar, nomorTelepon } = req.body;
     const sql = "INSERT INTO sewa (nama, tanggal, jam_masuk, jam_keluar, nomor_telepon) VALUES (?, ?, ?, ?, ?)";
     db.query(sql, [nama, tanggal, jamMasuk, jamKeluar, nomorTelepon], (err, result) => {
@@ -112,7 +123,6 @@ app.post('/update', (req, res) => {
         }
     });
 });
-
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
