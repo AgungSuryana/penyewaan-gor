@@ -8,17 +8,35 @@
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
 </head>
 
 <body>
-    <ul class="nav nav-pills fixed-top-nav">
-        <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="/">Penyewaan</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" href="/jadwal">Lihat jadwal</a>
-        </li>
-    </ul>
+
+
+    <nav class="navbar navbar-dark" style="background: #03346E">
+        <a class="navbar-brand" href="#" style="font-weight: bold;"> <img src="/icon1.png" width="30" height="30"
+                class="d-inline-block align-top" alt="" style="background: none;">GOR AGS</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item ">
+                    <a class="nav-link" href="/">PENYEWAAN</a>
+                </li>
+                <li class="nav-item active mt-1">
+                    <a class="nav-link" href="/jadwal">LIHAT JADWAL</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
     <div class="container">
         <!-- Formulir Pencarian -->
         <form class="form mb-4" action="/search" method="GET">
@@ -28,63 +46,68 @@
             <button type="submit" class="btn btn-primary mt-2 form--submit">Lihat</button>
         </form>
 
-        <!-- Tabel Jadwal -->
-        <span class="sewa">Jadwal</span>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">Nama</th>
-                    <th scope="col">Tanggal</th>
-                    <th scope="col">Masuk</th>
-                    <th scope="col">Keluar</th>
-                    <th scope="col">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (data.length> 0) { %>
-                    <% data.forEach(item=> { %>
+        <!-- Tampilkan Tanggal yang Dipilih -->
+        <span class="sewa">Jadwal tanggal :</span>
+        <% if (typeof selectedDate !=='undefined' && selectedDate) { %>
+            <H4>
+                <%= moment(selectedDate).format('DD-MM-YYYY') %>
+            </H4>
+            <% } %>
+
+                <!-- Tabel Jadwal -->
+                <table class="table table-striped">
+                    <thead>
                         <tr>
-                            <td>
-                                <%= item.nama %>
-                            </td>
-                            <td>
-                                <%= moment(item.tanggal).format('DD-MM-YYYY') %>
-                            </td>
-                            <td>
-                                <%= moment(item.jam_masuk, 'HH:mm:ss' ).format('HH:mm') %>
-                            </td>
-                            <td>
-                                <%= moment(item.jam_keluar, 'HH:mm:ss' ).format('HH:mm') %>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-sm btn-primary btn-confirm-update"
-                                    data-bs-toggle="modal" data-bs-target="#modalConfirmUpdate"
-                                    data-nomor-telepon="<%= item.nomor_telepon %>"
-                                    data-tanggal="<%= moment(item.tanggal).format('YYYY-MM-DD') %>">
-                                    Update
-                                </button>
-                                <button type="button" style="width: 63px;" class="btn btn-sm btn-danger btn-confirm-delete mt-2 
-                                    data-bs-toggle=" modal" data-bs-target="#modalDelete"
-                                    data-nomor-telepon="<%= item.nomor_telepon %>"
-                                    data-tanggal="<%= moment(item.tanggal).format('YYYY-MM-DD') %>">
-                                    Delete
-                                </button>
-                            </td>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Masuk</th>
+                            <th scope="col">Keluar</th>
+                            <th scope="col">Aksi</th>
                         </tr>
-                        <% }); %>
-                            <% } else { %>
+                    </thead>
+                    <tbody>
+                        <% if (data.length> 0) { %>
+                            <% data.forEach(item=> { %>
                                 <tr>
-                                    <td colspan="5" class="text-center">Tidak ada jadwal untuk tanggal ini.</td>
+                                    <td>
+                                        <%= item.nama %>
+                                    </td>
+                                    <td>
+                                        <%= moment(item.jam_masuk, 'HH:mm:ss' ).format('HH:mm') %>
+                                    </td>
+                                    <td>
+                                        <%= moment(item.jam_keluar, 'HH:mm:ss' ).format('HH:mm') %>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-primary btn-confirm-update"
+                                            data-bs-toggle="modal" data-bs-target="#modalConfirmUpdate"
+                                            data-nomor-telepon="<%= item.nomor_telepon %>"
+                                            data-tanggal="<%= moment(item.tanggal).format('YYYY-MM-DD') %>"
+                                            data-jam-masuk="<%= item.jam_masuk %>"
+                                            data-jam-keluar="<%= item.jam_keluar %>" data-nama="<%= item.nama %>">
+                                            Update
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-danger btn-confirm-delete mt-2"
+                                            data-nomor-telepon="<%= item.nomor_telepon %>"
+                                            data-tanggal="<%= moment(item.tanggal).format('YYYY-MM-DD') %>"
+                                            data-jam-masuk="<%= item.jam_masuk %>"
+                                            data-jam-keluar="<%= item.jam_keluar %>" data-nama="<%= item.nama %>">
+                                            Delete
+                                        </button>
+                                    </td>
                                 </tr>
-                                <% } %>
-            </tbody>
-        </table>
+                                <% }); %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="4" class="text-center">Tidak ada jadwal untuk tanggal ini.</td>
+                                        </tr>
+                                        <% } %>
+                    </tbody>
+                </table>
     </div>
 
-    <footer class="bg-dark text-light mt-5">
+    <footer class="text-light mt-10" style="background: #03346E">
         <div class="container">
             <div class="row">
-
                 <div class="col-md-4 mb-3">
                     <h5>Kontak Kami</h5>
                     <ul class="list-unstyled">
@@ -99,12 +122,7 @@
                         pihak GOR AGS.</p>
                 </div>
 
-                <div class="col-md-4 mb-3">
-                    <p><iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d495.11237131753927!2d107.74501964083528!3d-6.902684218978498!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68dd1d10234631%3A0xaa7e0cec8327c408!2sGOR%20Badminton%20AGS%20Cikoneng%20(Warung%20pak%20karna)!5e0!3m2!1sid!2sid!4v1721058912321!5m2!1sid!2sid"
-                            width="370" height="300" style="border:0;" allowfullscreen="" loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"></iframe></p>
-                </div>
+
             </div>
             <div class="row">
                 <div class="col-12 text-center">
@@ -180,6 +198,9 @@
                     <form action="/delete" method="POST">
                         <input type="hidden" name="nomorTelepon" id="deleteNomorTelepon" value="">
                         <input type="hidden" name="tanggal" id="deleteTanggal" value="">
+                        <input type="hidden" name="jamMasuk" id="deleteJamMasuk" value="">
+                        <input type="hidden" name="jamKeluar" id="deleteJamKeluar" value="">
+                        <input type="hidden" name="nama" id="deleteNama" value="">
                         <div class="mb-3">
                             <label for="confirmTeleponDeleteFinal" class="form-label">Nomor Telepon:</label>
                             <input type="tel" name="confirmTelepon" class="form-control" id="confirmTeleponDeleteFinal"
@@ -187,6 +208,7 @@
                         </div>
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -198,6 +220,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+        crossorigin="anonymous"></script>
+
     <script>
         document.querySelectorAll('.btn-confirm-update').forEach(button => {
             button.addEventListener('click', () => {
@@ -233,14 +262,135 @@
             button.addEventListener('click', () => {
                 const nomorTelepon = button.getAttribute('data-nomor-telepon');
                 const tanggal = button.getAttribute('data-tanggal');
+                const jamMasuk = button.getAttribute('data-jam-masuk');
+                const jamKeluar = button.getAttribute('data-jam-keluar');
+                const nama = button.getAttribute('data-nama');
+
                 document.getElementById('deleteNomorTelepon').value = nomorTelepon;
                 document.getElementById('deleteTanggal').value = tanggal;
+                document.getElementById('deleteJamMasuk').value = jamMasuk;
+                document.getElementById('deleteJamKeluar').value = jamKeluar;
+                document.getElementById('deleteNama').value = nama;
 
                 const deleteModal = new bootstrap.Modal(document.getElementById('modalDelete'));
                 deleteModal.show();
             });
         });
+
     </script>
+    <!-- 
+<script>
+    document.querySelectorAll('.btn-confirm-update').forEach(button => {
+        button.addEventListener('click', () => {
+            const nomorTelepon = button.getAttribute('data-nomor-telepon');
+            const tanggal = button.getAttribute('data-tanggal');
+            const confirmTeleponInput = document.getElementById('confirmTeleponUpdate');
+            confirmTeleponInput.dataset.nomorTelepon = nomorTelepon;
+            confirmTeleponInput.dataset.tanggal = tanggal;
+        });
+    });
+
+    document.getElementById('btnConfirmUpdate').addEventListener('click', () => {
+        const confirmTeleponInput = document.getElementById('confirmTeleponUpdate');
+        const nomorTelepon = confirmTeleponInput.value;
+        const dataNomorTelepon = confirmTeleponInput.dataset.nomorTelepon;
+        const tanggal = confirmTeleponInput.dataset.tanggal;
+
+        if (nomorTelepon === dataNomorTelepon) {
+            document.getElementById('updateNomorTelepon').value = nomorTelepon;
+            document.getElementById('updateTanggal').value = tanggal;
+
+            const confirmModal = bootstrap.Modal.getInstance(document.getElementById('modalConfirmUpdate'));
+            confirmModal.hide();
+
+            const updateModal = new bootstrap.Modal(document.getElementById('modalUpdate'));
+            updateModal.show();
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: 'Nomor telepon tidak sesuai. Silakan coba lagi.',
+            });
+        }
+    });
+
+    document.querySelector('#modalUpdate form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Mencegah submit form secara normal
+
+        // Misalnya, jika update berhasil:
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: 'Data berhasil diupdate.',
+        }).then(() => {
+            // Tutup modal dan reload halaman setelah notifikasi
+            location.reload();
+        });
+    });
+
+    document.querySelectorAll('.btn-confirm-delete').forEach(button => {
+        button.addEventListener('click', () => {
+            const nomorTelepon = button.getAttribute('data-nomor-telepon');
+            const tanggal = button.getAttribute('data-tanggal');
+            const confirmDeleteInput = document.getElementById('confirmTeleponDeleteFinal');
+
+            confirmDeleteInput.dataset.nomorTelepon = nomorTelepon;
+            confirmDeleteInput.dataset.tanggal = tanggal;
+
+            const deleteModal = new bootstrap.Modal(document.getElementById('modalDelete'));
+            deleteModal.show();
+        });
+    });
+
+    document.querySelector('#modalDelete form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Mencegah submit form secara normal
+
+        const confirmDeleteInput = document.getElementById('confirmTeleponDeleteFinal');
+        const nomorTelepon = confirmDeleteInput.value;
+        const dataNomorTelepon = confirmDeleteInput.dataset.nomorTelepon;
+        const deleteNomorTeleponField = document.getElementById('deleteNomorTelepon');
+        const deleteTanggalField = document.getElementById('deleteTanggal');
+
+        if (nomorTelepon === dataNomorTelepon) {
+            deleteNomorTeleponField.value = nomorTelepon;
+            deleteTanggalField.value = confirmDeleteInput.dataset.tanggal;
+
+            // Close the modal
+            const deleteModal = bootstrap.Modal.getInstance(document.getElementById('modalDelete'));
+            deleteModal.hide();
+
+            Swal.fire({
+                icon: 'warning',
+                title: 'Apakah Anda yakin?',
+                text: `Anda akan menghapus jadwal untuk nomor telepon ${nomorTelepon}.`,
+                showCancelButton: true,
+                confirmButtonText: 'Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If confirmed, submit the form programmatically
+                    document.querySelector('#modalDelete form').submit();
+
+                    // Misalnya, jika delete berhasil:
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: `Jadwal untuk nomor telepon ${nomorTelepon} telah dihapus.`,
+                    }).then(() => {
+                        // Reload halaman setelah penghapusan sukses
+                        location.reload();
+                    });
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: 'Nomor telepon tidak sesuai. Silakan coba lagi.',
+            });
+        }
+    });
+</script> -->
 </body>
 
 </html>

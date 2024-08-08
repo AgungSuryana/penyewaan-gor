@@ -1,6 +1,6 @@
 body {
   font-family: Arial, sans-serif;
-  margin: 20px;
+
 }
 
 form {
@@ -85,10 +85,6 @@ th {
   color: grey;
 }
 
-.checkbox,
-input[type="checkbox"] {
-  accent-color: #639;
-}
 
 .form--submit {
   width: 50%;
@@ -119,17 +115,6 @@ input[type="checkbox"] {
 }
 
 
-.nav-pills {
-  display: flex;
-  justify-content: center;
-  padding: 3em 0;
-
-
-}
-
-.nav-item {
-  margin-right: 10px;
-}
 
 
 .jadwal {
@@ -146,30 +131,138 @@ input[type="checkbox"] {
   margin-top: 50px;
 }
 
-.fixed-top-nav {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1030;
-  background-color: #f8f9fa;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: 70px;
-  /* Mengubah tinggi navigasi */
-  padding: 10px 20px;
-  /* Mengubah padding dalam navigasi */
-}
 
-.fixed-top-nav .nav-link {
-  font-size: 1.25rem;
-  /* Mengubah ukuran teks navigasi */
-}
 
-body {
-  padding-top: 80px;
-  /* Memberikan padding yang sesuai untuk menyesuaikan dengan tinggi navigasi */
-}
 
 
 footer {
   padding-top: 1px;
+}
+
+.form {
+  background-color: white;
+  padding: 3.125em;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 5px 5px 15px -1px rgba(0, 0, 0, 0.75);
+}
+
+.signup {
+  color: rgb(77, 75, 75);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  display: block;
+  font-weight: bold;
+  font-size: x-large;
+  margin-bottom: 0.5em;
+}
+
+.form--input {
+  width: 100%;
+  margin-bottom: 1.25em;
+  height: 40px;
+  border-radius: 5px;
+  border: 1px solid gray;
+  padding: 0.8em;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+}
+
+.form--input:focus {
+  border: 1px solid #639;
+  outline: none;
+}
+
+.form--marketing {
+  display: flex;
+  margin-bottom: 1.25em;
+  align-items: center;
+}
+
+.form--marketing>input {
+  margin-right: 0.625em;
+}
+
+.form--marketing>label {
+  color: grey;
+}
+
+.checkbox,
+input[type="checkbox"] {
+  accent-color: #639;
+}
+
+.form--submit {
+  width: 50%;
+  padding: 0.625em;
+  border-radius: 5px;
+  color: white;
+  background-color: #639;
+  border: 1px dashed #639;
+  cursor: pointer;
+}
+
+.form--submit:hover {
+  color: #639;
+  background-color: white;
+  border: 1px dashed #639;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.navbar-nav .nav-item {
+  position: relative;
+}
+
+.navbar-nav .nav-item::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 2px;
+  background-color: #ffffff;
+  /* Warna garis */
+  transition: width 0.3s ease;
+  position: absolute;
+  bottom: -1px;
+  /* Jarak garis dari teks */
+  left: 0;
+}
+
+.navbar-nav .nav-item.active::after,
+.navbar-nav .nav-item:hover::after {
+  width: 100%;
+}
+
+
+.custom-btn {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  border: 2px solid #ffffff !important;
+  padding: 10px 20px !important;
+  color: white !important;
+  cursor: pointer !important;
+  text-align: center !important;
+  width: 150px !important;
+  height: 30px !important;
+  margin-top: 6px !important;
+  margin-left: auto;
+}
+
+.custom-btn:hover {
+  background-color: #45a049 !important;
+  /* Warna background saat hover */
 }

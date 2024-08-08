@@ -1,14 +1,25 @@
-express = require('express');
+const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const path = require('path');
 const moment = require('moment');
 const { body, validationResult } = require('express-validator');
+const bcrypt = require('bcrypt'); // Untuk verifikasi password
+const session = require('express-session'); // Untuk session management
 const app = express();
+
+app.use(session({
+    secret: 'agungganteng', // Ganti dengan key rahasia
+    resave: false,
+    saveUninitialized: true
+}));
 
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -22,31 +33,47 @@ db.connect((err) => {
     console.log('Database connected');
 });
 
-app.use(bodyParser.urlencoded({ extended: true }));
+// Middleware untuk memastikan user sudah login
+function ensureAuthenticated(req, res, next) {
+    if (req.session.isAuthenticated) {
+        return next();
+    }
+    res.redirect('/admin');
+}
+
+// Fungsi untuk mencari admin berdasarkan nama atau nomor telepon
+function findAdminByCredentials(identifier, callback) {
+    const sql = "SELECT * FROM admin WHERE Nama = ? OR nomor_telepon = ?";
+    db.query(sql, [identifier, identifier], callback);
+}
 
 // Route untuk halaman input sewa
 app.get('/', (req, res) => {
     res.render('index');
 });
 
-
-// Route untuk menambah sewa dengan validasi input
 app.post('/sewa', [
     body('nama').isString().notEmpty().withMessage('Nama harus berupa teks dan tidak boleh kosong'),
     body('tanggal').isISO8601().withMessage('Tanggal harus berupa tanggal yang valid'),
     body('jamMasuk').isString().notEmpty().withMessage('Jam masuk tidak boleh kosong'),
     body('jamKeluar').isString().notEmpty().withMessage('Jam keluar tidak boleh kosong'),
-    body('nomorTelepon').isNumeric().isLength({ min: 10, max: 12 }).withMessage('Nomor telepon harus berupa angka dan panjangnya antara 10 hingga 12 digit')
+    body('nomorTelepon').isNumeric().isLength({ min: 10, max: 13 }).withMessage('Masukan nomor telepon aktif dan benar')
 ], (req, res) => {
+    console.log('Data yang diterima:', req.body); // Debugging: lihat data yang diterima dari form
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        console.log('Errors:', errors.array()); // Debugging: lihat kesalahan validasi
+        return res.status(400).json({ success: false, message: errors.array()[0].msg });
     }
+
     const { nama, tanggal, jamMasuk, jamKeluar, nomorTelepon } = req.body;
     const sql = "INSERT INTO sewa (nama, tanggal, jam_masuk, jam_keluar, nomor_telepon) VALUES (?, ?, ?, ?, ?)";
     db.query(sql, [nama, tanggal, jamMasuk, jamKeluar, nomorTelepon], (err, result) => {
-        if (err) throw err;
-        res.redirect('/');
+        if (err) {
+            console.error('Error:', err);
+            return res.status(500).json({ success: false, message: 'Sewa Gagal Masukan Data Dengan Benar.' });
+        }
+        res.status(200).json({ success: true, message: 'Sewa Telah Berhasil Mohon untuk datang tepat waktu.' });
     });
 });
 
@@ -64,22 +91,35 @@ app.get('/search', (req, res) => {
             console.error('Error executing query:', err);
             res.status(500).send('Internal Server Error');
         } else {
-            res.render('jadwal', { data: result, moment: moment });
+            res.render('jadwal', {
+                data: result,
+                selectedDate: tanggal,
+                moment: moment
+            });
         }
     });
 });
 
-// Route untuk delete jadwal
 app.post('/delete', (req, res) => {
-    const { nomorTelepon, tanggal } = req.body;
-    const sql = "DELETE FROM sewa WHERE nomor_telepon = ? AND tanggal = ?";
-    db.query(sql, [nomorTelepon, tanggal], (err, result) => {
+    const { nomorTelepon, tanggal, jamMasuk, jamKeluar, nama } = req.body;
+
+    console.log('Data untuk dihapus:', { nomorTelepon, tanggal, jamMasuk, jamKeluar, nama });
+
+    const sqlDelete = 'DELETE FROM sewa WHERE nomor_telepon = ? AND tanggal = ? AND jam_masuk = ? AND jam_keluar = ? AND nama = ?';
+
+    console.log('Query:', sqlDelete);
+
+    db.query(sqlDelete, [nomorTelepon, tanggal, jamMasuk, jamKeluar, nama], (err, result) => {
         if (err) {
             console.error('Error executing query:', err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send('Error deleting record');
         } else {
-            console.log('Deleted successfully');
-            res.redirect('/jadwal');
+            console.log('Result:', result);
+            if (result.affectedRows > 0) {
+                res.send('Record deleted successfully');
+            } else {
+                res.status(404).send('No record found to delete');
+            }
         }
     });
 });
@@ -122,6 +162,66 @@ app.post('/update', (req, res) => {
             }
         }
     });
+});
+
+// Route untuk halaman login admin (GET)
+app.get('/admin', (req, res) => {
+    res.render('admin', { error: null });
+});
+
+app.post('/admin/login', [
+    body('identifier').isString().notEmpty().withMessage('Identifier tidak boleh kosong'),
+    body('password').isString().notEmpty().withMessage('Password tidak boleh kosong')
+], (req, res) => {
+    const { identifier, password } = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    findAdminByCredentials(identifier, (err, result) => {
+        if (err) {
+            console.error('Terjadi kesalahan saat mencari admin:', err);
+            return res.status(500).send('Terjadi kesalahan pada server.');
+        }
+
+        if (result.length === 0) {
+            console.log('Login gagal: Admin tidak ditemukan.');
+            return res.redirect('/admin?error=login'); // Arahkan ke halaman login dengan parameter error
+        }
+
+        const admin = result[0];
+        const hashedPassword = admin.Password; // Pastikan kolom ini sesuai dengan nama kolom di database
+        console.log('Password yang dimasukkan:', password);
+        console.log('Password di database:', hashedPassword);
+
+        if (!hashedPassword) {
+            console.error('Password di database tidak ditemukan');
+            return res.redirect('/admin?error=server'); // Arahkan ke halaman login dengan parameter error
+        }
+
+        bcrypt.compare(password, hashedPassword, (err, isMatch) => {
+            if (err) {
+                console.error('Error comparing passwords:', err);
+                return res.redirect('/admin?error=server'); // Arahkan ke halaman login dengan parameter error
+            }
+
+            if (isMatch) {
+                console.log('Login berhasil');
+                req.session.isAuthenticated = true; // Set status login
+                res.redirect('/admin/dashboard');
+            } else {
+                console.log('Login gagal: Password salah');
+                return res.redirect('/admin?error=password'); // Arahkan ke halaman login dengan parameter error
+            }
+        });
+    });
+});
+
+
+// Route untuk dashboard admin yang membutuhkan autentikasi
+app.get('/admin/dashboard', ensureAuthenticated, (req, res) => {
+    res.render('admindashboard');
 });
 
 app.listen(3000, () => {

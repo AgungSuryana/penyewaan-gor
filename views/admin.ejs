@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <h2></h2>
+        <% if (error) { %>
+            <p style="color: red;">
+                <%= error %>
+            </p>
+            <% } %>
+
+                <form class="form" action="/admin/login" method="POST">
+                    <span class="signup">Login Admin</span>
+                    <input type="text" id="identifier" name="identifier" placeholder="Nama / No Telepon"
+                        class="form--input" required>
+                    <input type="password" id="password" name="password" placeholder="Password" class="form--input"
+                        required>
+
+                    <button class="form--submit">
+                        Login
+                    </button>
+                </form>
+
+    </div>
+</body>
+
+</html>

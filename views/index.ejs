@@ -4,33 +4,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sewa</title>
+
+
+    <link rel="icon" href="public/icon1.png">
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
-
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <title>Sewa</title>
 </head>
 
 <body>
-    <ul class="nav nav-pills fixed-top-nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Penyewaan</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/jadwal">Lihat jadwal</a>
-        </li>
-    </ul>
+
+    <nav class="navbar navbar-dark" style="background: #03346E">
+        <a class="navbar-brand" href="#" style="font-weight: bold;"> <img src="/icon1.png" width="30" height="30"
+                class="d-inline-block align-top" alt="" style="background: none;">GOR AGS</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">PENYEWAAN</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/jadwal">LIHAT JADWAL</a>
+                </li>
+                <button type="button" class="btn custom-btn" onclick="window.location.href='/admin'">
+                    LOGIN ADMIN
+                </button>
+
+            </ul>
+        </div>
+
+
+    </nav>
+
 
 
     <div class="container">
-        <form class="form" action="/sewa" method="POST">
-            <span class="sewa">PENYEWAAN</span>
-
-            <label class="mr" for="nama">Nama:</label>
+        <form class="form" action="/sewa" method="POST" id="sewaForm">
+            <span class="sewa">Penyewaan</span>
+            <label for="nama">Nama:</label>
             <input type="text" id="nama" name="nama" class="form--input" placeholder="Masukan Nama Asli" required>
-
 
             <label for="tanggal">Tanggal:</label>
             <input type="date" id="tanggal" name="tanggal" class="form--input" required>
@@ -41,18 +60,18 @@
             <label for="jamKeluar">Jam Keluar:</label>
             <input type="time" id="jamKeluar" name="jamKeluar" class="form--input" required>
 
-            <label class="mr" for="nomorTelepon">Nomor Telepon:</label>
+            <label for="nomorTelepon">Nomor Telepon:</label>
             <input type="number" id="nomorTelepon" name="nomorTelepon" class="form--input"
                 placeholder="Masukan Nomor Telepon Aktif" required>
 
             <button type="submit" class="btn btn-primary mt-4 form--submit">Sewa</button>
         </form>
+
     </div>
 
-    <footer class="bg-dark text-light mt-5">
+    <footer class="text-light mt-5" style="background: #03346E">
         <div class="container">
             <div class="row">
-
                 <div class="col-md-4 mb-3">
                     <h5>Kontak Kami</h5>
                     <ul class="list-unstyled">
@@ -67,12 +86,7 @@
                         pihak GOR AGS.</p>
                 </div>
 
-                <div class="col-md-4 mb-3">
-                    <p><iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d495.11237131753927!2d107.74501964083528!3d-6.902684218978498!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68dd1d10234631%3A0xaa7e0cec8327c408!2sGOR%20Badminton%20AGS%20Cikoneng%20(Warung%20pak%20karna)!5e0!3m2!1sid!2sid!4v1721058912321!5m2!1sid!2sid"
-                            width="370" height="300" style="border:0;" allowfullscreen="" loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"></iframe></p>
-                </div>
+
             </div>
             <div class="row">
                 <div class="col-12 text-center">
@@ -83,12 +97,169 @@
     </footer>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
-        integrity="sha384-oBqDVmMz4fnFO9gybA1rTsvByXnUubk/h5FRVbYl5HlybU6GkW+bCkeGos+Lti0o"
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-4/oE+H+xIz5qqDe9/h6DvOn+IjD5jKbiRlNVhbB+t1sqZC5JpVJe3I+pNryWgRXp"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
         crossorigin="anonymous"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script>
+        document.getElementById('sewaForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            console.log('Form Data:', [...formData.entries()]); // Debugging: lihat data yang dikirim
+
+            fetch(this.action, {
+                method: 'POST',
+                body: new URLSearchParams(formData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Data dari server:', data); // Debugging: lihat data yang diterima
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil Sewa!',
+                            text: data.message
+                        }).then(() => {
+                            this.reset(); // Reset form setelah SweetAlert ditutup
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal Sewa!',
+                            text: data.message
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                });
+        });
+
+    </script>
 </body>
 
 </html>
+
+<!-- 
+<script>
+    document.querySelectorAll('.btn-confirm-update').forEach(button => {
+        button.addEventListener('click', () => {
+            const nomorTelepon = button.getAttribute('data-nomor-telepon');
+            const tanggal = button.getAttribute('data-tanggal');
+            const confirmTeleponInput = document.getElementById('confirmTeleponUpdate');
+            confirmTeleponInput.dataset.nomorTelepon = nomorTelepon;
+            confirmTeleponInput.dataset.tanggal = tanggal;
+        });
+    });
+
+    document.getElementById('btnConfirmUpdate').addEventListener('click', () => {
+        const confirmTeleponInput = document.getElementById('confirmTeleponUpdate');
+        const nomorTelepon = confirmTeleponInput.value;
+        const dataNomorTelepon = confirmTeleponInput.dataset.nomorTelepon;
+        const tanggal = confirmTeleponInput.dataset.tanggal;
+
+        if (nomorTelepon === dataNomorTelepon) {
+            document.getElementById('updateNomorTelepon').value = nomorTelepon;
+            document.getElementById('updateTanggal').value = tanggal;
+
+            const confirmModal = bootstrap.Modal.getInstance(document.getElementById('modalConfirmUpdate'));
+            confirmModal.hide();
+
+            const updateModal = new bootstrap.Modal(document.getElementById('modalUpdate'));
+            updateModal.show();
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: 'Nomor telepon tidak sesuai. Silakan coba lagi.',
+            });
+        }
+    });
+
+    document.querySelector('#modalUpdate form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Mencegah submit form secara normal
+
+        // Misalnya, jika update berhasil:
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: 'Data berhasil diupdate.',
+        }).then(() => {
+            // Tutup modal dan reload halaman setelah notifikasi
+            location.reload();
+        });
+    });
+
+    document.querySelectorAll('.btn-confirm-delete').forEach(button => {
+        button.addEventListener('click', () => {
+            const nomorTelepon = button.getAttribute('data-nomor-telepon');
+            const tanggal = button.getAttribute('data-tanggal');
+            const confirmDeleteInput = document.getElementById('confirmTeleponDeleteFinal');
+
+            confirmDeleteInput.dataset.nomorTelepon = nomorTelepon;
+            confirmDeleteInput.dataset.tanggal = tanggal;
+
+            const deleteModal = new bootstrap.Modal(document.getElementById('modalDelete'));
+            deleteModal.show();
+        });
+    });
+
+    document.querySelector('#modalDelete form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Mencegah submit form secara normal
+
+        const confirmDeleteInput = document.getElementById('confirmTeleponDeleteFinal');
+        const nomorTelepon = confirmDeleteInput.value;
+        const dataNomorTelepon = confirmDeleteInput.dataset.nomorTelepon;
+        const deleteNomorTeleponField = document.getElementById('deleteNomorTelepon');
+        const deleteTanggalField = document.getElementById('deleteTanggal');
+
+        if (nomorTelepon === dataNomorTelepon) {
+            deleteNomorTeleponField.value = nomorTelepon;
+            deleteTanggalField.value = confirmDeleteInput.dataset.tanggal;
+
+            // Close the modal
+            const deleteModal = bootstrap.Modal.getInstance(document.getElementById('modalDelete'));
+            deleteModal.hide();
+
+            Swal.fire({
+                icon: 'warning',
+                title: 'Apakah Anda yakin?',
+                text: `Anda akan menghapus jadwal untuk nomor telepon ${nomorTelepon}.`,
+                showCancelButton: true,
+                confirmButtonText: 'Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If confirmed, submit the form programmatically
+                    document.querySelector('#modalDelete form').submit();
+
+                    // Misalnya, jika delete berhasil:
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: `Jadwal untuk nomor telepon ${nomorTelepon} telah dihapus.`,
+                    }).then(() => {
+                        // Reload halaman setelah penghapusan sukses
+                        location.reload();
+                    });
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: 'Nomor telepon tidak sesuai. Silakan coba lagi.',
+            });
+        }
+    });
+</script> -->
