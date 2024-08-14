@@ -306,3 +306,19 @@ input[type="checkbox"] {
   width: 100%;
   max-width: 300px;
 }
+
+.btn-logout {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #f44336;
+  /* Merah */
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.btn-logout:hover {
+  background-color: #d32f2f;
+  /* Merah lebih gelap saat hover */
+}

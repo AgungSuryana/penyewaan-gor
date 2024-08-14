@@ -6,13 +6,35 @@ const moment = require('moment');
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt'); // Untuk verifikasi password
 const session = require('express-session'); // Untuk session management
+const helmet = require('helmet'); // Untuk keamanan HTTP header
+const rateLimit = require('express-rate-limit'); // Untuk rate limiting
+
 const app = express();
 
+// Menggunakan Helmet untuk keamanan header
+app.use(helmet());
+
+// Rate limiting untuk mencegah serangan DDoS
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 menit
+    max: 100, // Batas maksimum 100 permintaan per 15 menit
+    message: "Terlalu banyak permintaan dari IP ini, coba lagi nanti."
+});
+
+app.use(limiter);
+
 app.use(session({
-    secret: 'agungganteng', // Ganti dengan key rahasia
+    secret: 'string_yang_sangat_rahasia_yang_sulit_ditebak',
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    name: 'GorCookie',
+    cookie: {
+        httpOnly: true,  // Hanya dapat diakses melalui HTTP(S)
+        secure: process.env.NODE_ENV === 'production', // Hanya kirimkan cookie di HTTPS
+        maxAge: 24 * 60 * 60 * 1000 // Durasi cookie (misalnya 1 hari)
+    }
 }));
+
 
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
@@ -100,16 +122,10 @@ app.get('/search', (req, res) => {
     });
 });
 
+// Route untuk menghapus data sewa
 app.post('/path-to-delete-endpoint', (req, res) => {
     const { nomor_telepon, tanggal, jam_masuk, jam_keluar } = req.body;
 
-    // Pastikan parameter yang diterima dari frontend sesuai
-    console.log('Nomor Telepon:', nomor_telepon);
-    console.log('Tanggal:', tanggal);
-    console.log('Jam Masuk:', jam_masuk);
-    console.log('Jam Keluar:', jam_keluar);
-
-    // Hapus baris yang cocok dengan semua parameter
     const query = `
         DELETE FROM sewa 
         WHERE nomor_telepon = ? 
@@ -132,8 +148,7 @@ app.post('/path-to-delete-endpoint', (req, res) => {
     });
 });
 
-
-
+// Route untuk verifikasi nomor telepon dan tanggal
 app.get('/verify-phone-date', (req, res) => {
     const { nomorTelepon, tanggal } = req.query;
 
@@ -147,7 +162,6 @@ app.get('/verify-phone-date', (req, res) => {
         res.json({ valid: result.length > 0 });
     });
 });
-
 
 // Route untuk menampilkan data pada modal update
 app.get('/update-modal/:id', (req, res) => {
@@ -163,10 +177,10 @@ app.get('/update-modal/:id', (req, res) => {
     });
 });
 
+// Route untuk memperbarui data sewa
 app.post('/update', (req, res) => {
     const { nomorTelepon, tanggal, nama, jamMasuk, jamKeluar } = req.body;
 
-    // Periksa apakah nomor telepon ada pada tanggal yang dipilih
     const checkSql = "SELECT * FROM sewa WHERE nomor_telepon = ? AND tanggal = ?";
     db.query(checkSql, [nomorTelepon, tanggal], (err, result) => {
         if (err) {
@@ -176,7 +190,6 @@ app.post('/update', (req, res) => {
             if (result.length === 0) {
                 res.status(400).send('Nomor telepon tidak terdaftar pada tanggal ini.');
             } else {
-                // Jika nomor telepon ada, lakukan update
                 const updateSql = "UPDATE sewa SET nama = ?, jam_masuk = ?, jam_keluar = ? WHERE nomor_telepon = ? AND tanggal = ?";
                 db.query(updateSql, [nama, jamMasuk, jamKeluar, nomorTelepon, tanggal], (err, result) => {
                     if (err) {
@@ -191,12 +204,12 @@ app.post('/update', (req, res) => {
     });
 });
 
-
 // Route untuk halaman login admin (GET)
 app.get('/admin', (req, res) => {
     res.render('admin', { error: null });
 });
 
+// Route untuk login admin (POST)
 app.post('/admin/login', [
     body('identifier').isString().notEmpty().withMessage('Identifier tidak boleh kosong'),
     body('password').isString().notEmpty().withMessage('Password tidak boleh kosong')
@@ -215,38 +228,44 @@ app.post('/admin/login', [
 
         if (result.length === 0) {
             console.log('Login gagal: Admin tidak ditemukan.');
-            return res.redirect('/admin?error=login'); // Arahkan ke halaman login dengan parameter error
+            return res.redirect('/admin?error=login');
         }
 
         const admin = result[0];
-        const hashedPassword = admin.Password; // Pastikan kolom ini sesuai dengan nama kolom di database
-        console.log('Password yang dimasukkan:', password);
-        console.log('Password di database:', hashedPassword);
-
-        if (!hashedPassword) {
-            console.error('Password di database tidak ditemukan');
-            return res.redirect('/admin?error=server'); // Arahkan ke halaman login dengan parameter error
-        }
+        const hashedPassword = admin.Password;
 
         bcrypt.compare(password, hashedPassword, (err, isMatch) => {
             if (err) {
                 console.error('Error comparing passwords:', err);
-                return res.redirect('/admin?error=server'); // Arahkan ke halaman login dengan parameter error
+                return res.redirect('/admin?error=server');
             }
 
             if (isMatch) {
                 console.log('Login berhasil');
-                req.session.isAuthenticated = true; // Set status login
+                req.session.isAuthenticated = true;
                 res.redirect('/admin/dashboard');
             } else {
                 console.log('Login gagal: Password salah');
-                return res.redirect('/admin?error=password'); // Arahkan ke halaman login dengan parameter error
+                return res.redirect('/admin?error=password');
             }
         });
     });
 });
-// Route untuk menampilkan data sewa dalam bentuk card
-app.get('/admin/dashboard', (req, res) => {
+
+// Route untuk logout
+app.get('/admin/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Error destroying session:', err);
+            return res.status(500).send('Internal Server Error');
+        }
+        res.redirect('/admin'); // Redirect ke halaman login setelah logout
+    });
+});
+
+
+// Route untuk dashboard admin
+app.get('/admin/dashboard', ensureAuthenticated, (req, res) => {
     const sql = "SELECT * FROM sewa";
     db.query(sql, (err, result) => {
         if (err) {
@@ -256,13 +275,6 @@ app.get('/admin/dashboard', (req, res) => {
             res.render('admindashboard', { data: result, moment: moment });
         }
     });
-});
-
-
-
-// Route untuk dashboard admin yang membutuhkan autentikasi
-app.get('/admin/dashboard', ensureAuthenticated, (req, res) => {
-    res.render('admindashboard');
 });
 
 app.listen(3000, () => {
