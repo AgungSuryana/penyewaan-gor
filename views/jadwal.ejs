@@ -14,25 +14,25 @@
 </head>
 
 <body>
-
-
     <nav class="navbar navbar-dark" style="background: #03346E">
-        <a class="navbar-brand" href="#" style="font-weight: bold;"> <img src="/icon1.png" width="30" height="30"
-                class="d-inline-block align-top" alt="" style="background: none;">GOR AGS</a>
-
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item ">
-                    <a class="nav-link" href="/">PENYEWAAN</a>
-                </li>
-                <li class="nav-item active mt-1">
-                    <a class="nav-link" href="/jadwal">LIHAT JADWAL</a>
-                </li>
-            </ul>
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" style="font-weight: bold;"> <img src="/icon1.png" width="30" height="30"
+                    class="d-inline-block align-top" alt="" style="background: none;">GOR</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/">PENYEWAAN</a>
+                    </li>
+                    <li class="nav-item active mt-1">
+                        <a class="nav-link" href="/jadwal">LIHAT JADWAL</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
@@ -111,7 +111,7 @@
                 <div class="col-md-4 mb-3">
                     <h5>Kontak Kami</h5>
                     <ul class="list-unstyled">
-                        <li>Alamat : Kp Cikoneng 2 (Warung pak Karna) </li>
+                        <li>Alamat :Bandung</li>
                         <li>Telepon : +62 812 3456 7890</li>
                     </ul>
                 </div>
@@ -119,37 +119,36 @@
                 <div class="col-md-4 mb-3">
                     <h5>Informasi</h5>
                     <p>Pembayaran sewa hanya bayar di tempat apabila ada oknum yang menyuruh transfer itu bukan dari
-                        pihak GOR AGS.</p>
+                        pihak GOR .</p>
                 </div>
 
 
             </div>
-            <div class="row">
-                <div class="col-12 text-center">
-                    <p class="mb-0">© 2024 Jadwal Penyewaan. All rights reserved.</p>
-                </div>
-            </div>
+
         </div>
     </footer>
 
-    <!-- Modal Konfirmasi Update -->
+    <!-- Modal Konfirmasi -->
     <div class="modal fade" id="modalConfirmUpdate" tabindex="-1" aria-labelledby="modalConfirmUpdateLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalConfirmUpdateLabel">Konfirmasi Update</h5>
+                    <h5 class="modal-title" id="modalConfirmUpdateLabel">Konfirmasi Nomor Telepon</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="confirmUpdateForm">
+                    <form id="formConfirmUpdate">
                         <div class="mb-3">
-                            <label for="confirmTeleponUpdate" class="form-label">Nomor Telepon:</label>
-                            <input type="tel" name="confirmTelepon" class="form-control" id="confirmTeleponUpdate"
-                                required>
+                            <label for="confirmTeleponUpdate" class="form-label">Nomor Telepon</label>
+                            <input type="text" class="form-control" id="confirmTeleponUpdate" required>
                         </div>
-                        <button type="button" class="btn btn-primary" id="btnConfirmUpdate">Konfirmasi</button>
+                        <input type="hidden" id="tanggalUpdate" value="<!-- pastikan tanggal dikirimkan di sini -->">
                     </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary" id="btnConfirmUpdate">Konfirmasi</button>
                 </div>
             </div>
         </div>
@@ -160,24 +159,31 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalUpdateLabel">Update Jadwal</h5>
+                    <h5 class="modal-title" id="modalUpdateLabel">Update Data</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/update" method="POST">
-                        <input type="hidden" name="nomorTelepon" id="updateNomorTelepon" value="">
-                        <input type="hidden" name="tanggal" id="updateTanggal" value="">
+                    <form id="formUpdate" method="POST" action="/update">
                         <div class="mb-3">
-                            <label for="namaUpdate" class="form-label">Nama:</label>
-                            <input type="text" name="nama" class="form-control" id="namaUpdate" required>
+                            <label for="updateNomorTelepon" class="form-label">Nomor Telepon</label>
+                            <input type="text" class="form-control" id="updateNomorTelepon" name="nomorTelepon" readonly
+                                required>
                         </div>
                         <div class="mb-3">
-                            <label for="jamMasukUpdate" class="form-label">Jam Masuk:</label>
-                            <input type="time" name="jamMasuk" class="form-control" id="jamMasukUpdate" required>
+                            <label for="updateTanggal" class="form-label">Tanggal</label>
+                            <input type="text" class="form-control" id="updateTanggal" name="tanggal" readonly required>
                         </div>
                         <div class="mb-3">
-                            <label for="jamKeluarUpdate" class="form-label">Jam Keluar:</label>
-                            <input type="time" name="jamKeluar" class="form-control" id="jamKeluarUpdate" required>
+                            <label for="updateNama" class="form-label">Nama</label>
+                            <input type="text" class="form-control" id="updateNama" name="nama" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateJamMasuk" class="form-label">Jam Masuk</label>
+                            <input type="time" class="form-control" id="updateJamMasuk" name="jamMasuk" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateJamKeluar" class="form-label">Jam Keluar</label>
+                            <input type="time" class="form-control" id="updateJamKeluar" name="jamKeluar" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Update</button>
                     </form>
@@ -185,6 +191,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- Modal Delete -->
     <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
@@ -195,7 +202,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/delete" method="POST">
+                    <form id="deleteForm" action="/path-to-delete-endpoint" method="POST">
                         <input type="hidden" name="nomorTelepon" id="deleteNomorTelepon" value="">
                         <input type="hidden" name="tanggal" id="deleteTanggal" value="">
                         <input type="hidden" name="jamMasuk" id="deleteJamMasuk" value="">
@@ -208,11 +215,12 @@
                         </div>
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
-
                 </div>
             </div>
         </div>
     </div>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -223,21 +231,27 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
-        crossorigin="anonymous"></script>
 
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // Handle button click for update confirmation
         document.querySelectorAll('.btn-confirm-update').forEach(button => {
             button.addEventListener('click', () => {
                 const nomorTelepon = button.getAttribute('data-nomor-telepon');
                 const tanggal = button.getAttribute('data-tanggal');
-                const confirmTeleponInput = document.getElementById('confirmTeleponUpdate');
-                confirmTeleponInput.dataset.nomorTelepon = nomorTelepon;
-                confirmTeleponInput.dataset.tanggal = tanggal;
+
+                // Set data into confirmation modal
+                document.getElementById('confirmTeleponUpdate').dataset.nomorTelepon = nomorTelepon;
+                document.getElementById('confirmTeleponUpdate').dataset.tanggal = tanggal;
+
+                // Show confirmation modal
+                const modalConfirmUpdate = new bootstrap.Modal(document.getElementById('modalConfirmUpdate'));
+                modalConfirmUpdate.show();
             });
         });
 
+        // Handle confirm update button click
         document.getElementById('btnConfirmUpdate').addEventListener('click', () => {
             const confirmTeleponInput = document.getElementById('confirmTeleponUpdate');
             const nomorTelepon = confirmTeleponInput.value;
@@ -245,17 +259,39 @@
             const tanggal = confirmTeleponInput.dataset.tanggal;
 
             if (nomorTelepon === dataNomorTelepon) {
+                // Set data into update modal
                 document.getElementById('updateNomorTelepon').value = nomorTelepon;
                 document.getElementById('updateTanggal').value = tanggal;
 
-                const confirmModal = bootstrap.Modal.getInstance(document.getElementById('modalConfirmUpdate'));
-                confirmModal.hide();
+                // Hide confirmation modal
+                const modalConfirmUpdate = bootstrap.Modal.getInstance(document.getElementById('modalConfirmUpdate'));
+                modalConfirmUpdate.hide();
 
-                const updateModal = new bootstrap.Modal(document.getElementById('modalUpdate'));
-                updateModal.show();
+                // Show update modal
+                const modalUpdate = new bootstrap.Modal(document.getElementById('modalUpdate'));
+                modalUpdate.show();
             } else {
-                alert('Nomor telepon tidak sesuai. Silakan coba lagi.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Nomor telepon tidak sesuai. Silakan coba lagi.',
+                });
             }
+        });
+
+        // Handle form submission for update
+        document.querySelector('#modalUpdate form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Simulate successful update
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: 'Data berhasil diupdate.',
+            }).then(() => {
+                // Close modal and reload page after notification
+                location.reload();
+            });
         });
 
         document.querySelectorAll('.btn-confirm-delete').forEach(button => {
@@ -265,6 +301,12 @@
                 const jamMasuk = button.getAttribute('data-jam-masuk');
                 const jamKeluar = button.getAttribute('data-jam-keluar');
                 const nama = button.getAttribute('data-nama');
+
+                console.log('Nomor Telepon:', nomorTelepon);
+                console.log('Tanggal:', tanggal);
+                console.log('Jam Masuk:', jamMasuk);
+                console.log('Jam Keluar:', jamKeluar);
+                console.log('Nama:', nama);
 
                 document.getElementById('deleteNomorTelepon').value = nomorTelepon;
                 document.getElementById('deleteTanggal').value = tanggal;
@@ -277,120 +319,80 @@
             });
         });
 
-    </script>
-    <!-- 
-<script>
-    document.querySelectorAll('.btn-confirm-update').forEach(button => {
-        button.addEventListener('click', () => {
-            const nomorTelepon = button.getAttribute('data-nomor-telepon');
-            const tanggal = button.getAttribute('data-tanggal');
-            const confirmTeleponInput = document.getElementById('confirmTeleponUpdate');
-            confirmTeleponInput.dataset.nomorTelepon = nomorTelepon;
-            confirmTeleponInput.dataset.tanggal = tanggal;
-        });
-    });
+        document.querySelector('#modalDelete form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Mencegah submit form secara normal
 
-    document.getElementById('btnConfirmUpdate').addEventListener('click', () => {
-        const confirmTeleponInput = document.getElementById('confirmTeleponUpdate');
-        const nomorTelepon = confirmTeleponInput.value;
-        const dataNomorTelepon = confirmTeleponInput.dataset.nomorTelepon;
-        const tanggal = confirmTeleponInput.dataset.tanggal;
-
-        if (nomorTelepon === dataNomorTelepon) {
-            document.getElementById('updateNomorTelepon').value = nomorTelepon;
-            document.getElementById('updateTanggal').value = tanggal;
-
-            const confirmModal = bootstrap.Modal.getInstance(document.getElementById('modalConfirmUpdate'));
-            confirmModal.hide();
-
-            const updateModal = new bootstrap.Modal(document.getElementById('modalUpdate'));
-            updateModal.show();
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal',
-                text: 'Nomor telepon tidak sesuai. Silakan coba lagi.',
-            });
-        }
-    });
-
-    document.querySelector('#modalUpdate form').addEventListener('submit', function (event) {
-        event.preventDefault(); // Mencegah submit form secara normal
-
-        // Misalnya, jika update berhasil:
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil',
-            text: 'Data berhasil diupdate.',
-        }).then(() => {
-            // Tutup modal dan reload halaman setelah notifikasi
-            location.reload();
-        });
-    });
-
-    document.querySelectorAll('.btn-confirm-delete').forEach(button => {
-        button.addEventListener('click', () => {
-            const nomorTelepon = button.getAttribute('data-nomor-telepon');
-            const tanggal = button.getAttribute('data-tanggal');
             const confirmDeleteInput = document.getElementById('confirmTeleponDeleteFinal');
+            const nomorTelepon = confirmDeleteInput.value;
+            const dataNomorTelepon = document.getElementById('deleteNomorTelepon').value;
+            const tanggal = document.getElementById('deleteTanggal').value;
+            const jamMasuk = document.getElementById('deleteJamMasuk').value;
+            const jamKeluar = document.getElementById('deleteJamKeluar').value;
 
-            confirmDeleteInput.dataset.nomorTelepon = nomorTelepon;
-            confirmDeleteInput.dataset.tanggal = tanggal;
+            if (nomorTelepon === dataNomorTelepon) {
+                // Close the modal
+                const deleteModal = bootstrap.Modal.getInstance(document.getElementById('modalDelete'));
+                deleteModal.hide();
 
-            const deleteModal = new bootstrap.Modal(document.getElementById('modalDelete'));
-            deleteModal.show();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Apakah Anda yakin?',
+                    text: `Anda akan menghapus jadwal untuk nomor telepon ${nomorTelepon}.`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Hapus',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Submit the form programmatically
+                        const form = document.querySelector('#modalDelete form');
+                        const action = form.action; // Pastikan action form sudah benar
+                        const method = form.method; // Pastikan method form sudah benar
+
+                        // Gunakan fetch untuk submit form dengan AJAX
+                        fetch(action, {
+                            method: method,
+                            body: new URLSearchParams({
+                                nomor_telepon: nomorTelepon,
+                                tanggal: tanggal,
+                                jam_masuk: jamMasuk,
+                                jam_keluar: jamKeluar
+                            }),
+                        }).then(response => {
+                            if (response.ok) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    text: `Jadwal untuk nomor telepon ${nomorTelepon} telah dihapus.`,
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: 'Terjadi kesalahan saat menghapus data.',
+                                });
+                            }
+                        }).catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal',
+                                text: 'Terjadi kesalahan jaringan.',
+                            });
+                        });
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Nomor telepon tidak sesuai. Silakan coba lagi.',
+                });
+            }
         });
-    });
 
-    document.querySelector('#modalDelete form').addEventListener('submit', function (event) {
-        event.preventDefault(); // Mencegah submit form secara normal
 
-        const confirmDeleteInput = document.getElementById('confirmTeleponDeleteFinal');
-        const nomorTelepon = confirmDeleteInput.value;
-        const dataNomorTelepon = confirmDeleteInput.dataset.nomorTelepon;
-        const deleteNomorTeleponField = document.getElementById('deleteNomorTelepon');
-        const deleteTanggalField = document.getElementById('deleteTanggal');
-
-        if (nomorTelepon === dataNomorTelepon) {
-            deleteNomorTeleponField.value = nomorTelepon;
-            deleteTanggalField.value = confirmDeleteInput.dataset.tanggal;
-
-            // Close the modal
-            const deleteModal = bootstrap.Modal.getInstance(document.getElementById('modalDelete'));
-            deleteModal.hide();
-
-            Swal.fire({
-                icon: 'warning',
-                title: 'Apakah Anda yakin?',
-                text: `Anda akan menghapus jadwal untuk nomor telepon ${nomorTelepon}.`,
-                showCancelButton: true,
-                confirmButtonText: 'Hapus',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // If confirmed, submit the form programmatically
-                    document.querySelector('#modalDelete form').submit();
-
-                    // Misalnya, jika delete berhasil:
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: `Jadwal untuk nomor telepon ${nomorTelepon} telah dihapus.`,
-                    }).then(() => {
-                        // Reload halaman setelah penghapusan sukses
-                        location.reload();
-                    });
-                }
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal',
-                text: 'Nomor telepon tidak sesuai. Silakan coba lagi.',
-            });
-        }
-    });
-</script> -->
+    </script>
 </body>
 
 </html>

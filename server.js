@@ -100,29 +100,54 @@ app.get('/search', (req, res) => {
     });
 });
 
-app.post('/delete', (req, res) => {
-    const { nomorTelepon, tanggal, jamMasuk, jamKeluar, nama } = req.body;
+app.post('/path-to-delete-endpoint', (req, res) => {
+    const { nomor_telepon, tanggal, jam_masuk, jam_keluar } = req.body;
 
-    console.log('Data untuk dihapus:', { nomorTelepon, tanggal, jamMasuk, jamKeluar, nama });
+    // Pastikan parameter yang diterima dari frontend sesuai
+    console.log('Nomor Telepon:', nomor_telepon);
+    console.log('Tanggal:', tanggal);
+    console.log('Jam Masuk:', jam_masuk);
+    console.log('Jam Keluar:', jam_keluar);
 
-    const sqlDelete = 'DELETE FROM sewa WHERE nomor_telepon = ? AND tanggal = ? AND jam_masuk = ? AND jam_keluar = ? AND nama = ?';
+    // Hapus baris yang cocok dengan semua parameter
+    const query = `
+        DELETE FROM sewa 
+        WHERE nomor_telepon = ? 
+          AND tanggal = ? 
+          AND jam_masuk = ? 
+          AND jam_keluar = ?
+    `;
 
-    console.log('Query:', sqlDelete);
+    db.query(query, [nomor_telepon, tanggal, jam_masuk, jam_keluar], (error, results) => {
+        if (error) {
+            console.error('Error deleting record:', error);
+            return res.status(500).json({ success: false, message: 'Terjadi kesalahan saat menghapus data.' });
+        }
 
-    db.query(sqlDelete, [nomorTelepon, tanggal, jamMasuk, jamKeluar, nama], (err, result) => {
-        if (err) {
-            console.error('Error executing query:', err);
-            res.status(500).send('Error deleting record');
+        if (results.affectedRows > 0) {
+            res.json({ success: true });
         } else {
-            console.log('Result:', result);
-            if (result.affectedRows > 0) {
-                res.send('Record deleted successfully');
-            } else {
-                res.status(404).send('No record found to delete');
-            }
+            res.status(404).json({ success: false, message: 'Data tidak ditemukan.' });
         }
     });
 });
+
+
+
+app.get('/verify-phone-date', (req, res) => {
+    const { nomorTelepon, tanggal } = req.query;
+
+    const sql = "SELECT * FROM sewa WHERE nomor_telepon = ? AND tanggal = ?";
+    db.query(sql, [nomorTelepon, tanggal], (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        res.json({ valid: result.length > 0 });
+    });
+});
+
 
 // Route untuk menampilkan data pada modal update
 app.get('/update-modal/:id', (req, res) => {
@@ -138,9 +163,10 @@ app.get('/update-modal/:id', (req, res) => {
     });
 });
 
-// Route untuk melakukan update data
 app.post('/update', (req, res) => {
     const { nomorTelepon, tanggal, nama, jamMasuk, jamKeluar } = req.body;
+
+    // Periksa apakah nomor telepon ada pada tanggal yang dipilih
     const checkSql = "SELECT * FROM sewa WHERE nomor_telepon = ? AND tanggal = ?";
     db.query(checkSql, [nomorTelepon, tanggal], (err, result) => {
         if (err) {
@@ -150,6 +176,7 @@ app.post('/update', (req, res) => {
             if (result.length === 0) {
                 res.status(400).send('Nomor telepon tidak terdaftar pada tanggal ini.');
             } else {
+                // Jika nomor telepon ada, lakukan update
                 const updateSql = "UPDATE sewa SET nama = ?, jam_masuk = ?, jam_keluar = ? WHERE nomor_telepon = ? AND tanggal = ?";
                 db.query(updateSql, [nama, jamMasuk, jamKeluar, nomorTelepon, tanggal], (err, result) => {
                     if (err) {
@@ -163,6 +190,7 @@ app.post('/update', (req, res) => {
         }
     });
 });
+
 
 // Route untuk halaman login admin (GET)
 app.get('/admin', (req, res) => {
@@ -217,6 +245,19 @@ app.post('/admin/login', [
         });
     });
 });
+// Route untuk menampilkan data sewa dalam bentuk card
+app.get('/admin/dashboard', (req, res) => {
+    const sql = "SELECT * FROM sewa";
+    db.query(sql, (err, result) => {
+        if (err) {
+            console.error('Error fetching data:', err);
+            res.status(500).send('Internal Server Error');
+        } else {
+            res.render('admindashboard', { data: result, moment: moment });
+        }
+    });
+});
+
 
 
 // Route untuk dashboard admin yang membutuhkan autentikasi

@@ -15,7 +15,7 @@ db.connect((err) => {
 });
 
 // Password admin baru
-const plainPassword = '1'; // Password yang ingin di-hash
+const plainPassword = 'agung'; // Password yang ingin di-hash
 const saltRounds = 10; // Jumlah rounds untuk bcrypt
 
 // Hash password
@@ -26,7 +26,7 @@ bcrypt.hash(plainPassword, saltRounds, (err, hashedPassword) => {
 
     // Data admin baru
     const adminData = {
-        nama: 'A',
+        nama: 'Agu',
         nomor_telepon: '1234567890',
         Password: hashedPassword // Password yang sudah di-hash
     };

@@ -14,6 +14,26 @@
         <p>Di sini kamu bisa mengelola data dan melakukan berbagai tugas administratif.</p>
         <!-- Tambahkan konten dashboard lainnya di sini -->
     </div>
+
+    <div class="container">
+        <h1>Data Sewa</h1>
+        <div class="cards-container">
+            <% data.forEach(function(item) { %>
+                <div class="card">
+                    <h3>Nama: <%= item.nama %>
+                    </h3>
+                    <p>Tanggal: <%= moment(item.tanggal).format('DD/MM/YYYY') %>
+                    </p>
+                    <p>Jam Masuk: <%= item.jam_masuk %>
+                    </p>
+                    <p>Jam Keluar: <%= item.jam_keluar %>
+                    </p>
+                    <p>Nomor Telepon: <%= item.nomor_telepon %>
+                    </p>
+                </div>
+                <% }) %>
+        </div>
+    </div>
 </body>
 
 </html>
